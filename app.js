@@ -24,6 +24,7 @@ App({
                 wx.getUserInfo({
                     success: function(res) {
                         that.globalData.userInfo = res.userInfo
+                        that.globalData.userInfo.wxOpenId = decryptInfo(res.userInfo);
                         typeof cb == "function" && cb(that.globalData.userInfo)
                     }
                 })

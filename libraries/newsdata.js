@@ -1,14 +1,10 @@
-const API_URL = 'https://api.iclient.ifeng.com';
-// const API_URL = 'HTTPS://i.sports.ifeng.com';
-const API_URL2 = 'https://nine.ifeng.com';
-const API_LIVE = 'https://sports.live.ifeng.com/API';
+const API_URL = 'http://www.dadiscoder.com/ev-news/';
 const Promise = require('./bluebird')
 
-function fetchApi (type, params, flag) {
+function fetchData(url, page, wxUser) {
   return new Promise((resolve, reject) => {
     wx.request({
-      url: `${(flag == true) ? API_URL2 : API_URL}/${type}`,
-      data: Object.assign({}, params),
+      url: url,
       header: { 'Content-Type': 'json' },
       success: resolve,
       fail: reject
@@ -18,19 +14,15 @@ function fetchApi (type, params, flag) {
 }
 
 module.exports = {
-  API_URL: API_URL,
-  API_URL2: API_URL2,
-  find(type, params, flag=false) {
-    return fetchApi(type, params, flag)
-      .then(res => res.data)
+  findNews(page=1, wxUser='') {
+    let url = `${API_URL}get-hot?page=${page}&token=${wxUser}`
+    console.log(`findNews url: ${url}`)
+    return fetchNews(url, page, wxUser).then(res => res.data)
   }, 
-  findLive(type, params) {
-    return fetchApi(type, params, true)
-      .then(res => res.data)
-  },
-  findOne (id) {
-    return fetchApi('subject/' + id)
-      .then(res => res.data)
+  findComments(page=1, wxUser='') {
+    let url = `${API_URL}get-app-comment?page=${page}&token=${wxUser}`
+    console.log(`findComments url: ${url}`)
+    return fetchData('subject/' + id).then(res => res.data)
   }
 }
 

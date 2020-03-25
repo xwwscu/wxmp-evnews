@@ -1,9 +1,7 @@
 <import src="../common/swiper-card.wxml"/>
 <import src="../common/article-card.wxml"/>
 <import src="../common/picture-card.wxml"/>
-<import src="../common/video-card.wxml"/>
 <import src="../common/topic2-card.wxml"/>
-<import src="../common/doclive-card.wxml"/>
 <import src="../common/totop.wxml"/>
 
 <loading hidden="{{!loading}}">加载中...</loading>
@@ -26,40 +24,10 @@
   <template is="swiper" data="{{swiper}}"></template>
 </view>
 
-
-
-<!-- 搜索框部分 -->
-<view class="{{showSearch == true? 'search' : 'search height'}}">
-  <input type="text" placeholder="请输入关键字" focus="true" confirm-type="search" bindconfirm="bindSearch" bindinput="bindKeyInput" class="searcharea" wx:if="{{showSearch != true}}"/>
-  <view class="searchbtn" wx:if="{{showSearch != true}}" bindtap="ensureBtn">确定</view>
-  <icon  type="search" class="search-icon" size="26" bindtap="searchIcon" color="#de0000" wx:if="{{showSearch == true}}"/>
-</view>
-
-<!-- 专题栏导航部分 -->
-<view class="special">
-  <block wx:for="{{special.item}}" wx:key="special">
-    <view class="navitem" bindtap='navToSpecial' data-id="{{item.title == '直播' ? (item.id + '&gv=5.5.3') : item.id}}"><!--直播那个非要有gv=5.5.3也是醉了-->
-        <image src="{{item.thumbnail}}" class="navimg" mode="aspectFill"/>
-        <text class="title">{{item.title}}</text>     
-    </view>
-    </block>
-</view>
-
 <!-- 新闻列表部分 -->
 <view class="news">
-  <block wx:for="{{news.item}}" wx:key="news">
-    <block wx:if="{{item.type == 'doc'}}"><!--文章-->
-      <template is="article-card" data="{{item}}" />
-    </block>
-    <block wx:elif="{{item.type == 'slide'}}"><!--图片-->
-      <template is="picture-card" data="{{item}}" />
-    </block>
-    <block wx:elif="{{item.type == 'topic2'}}"><!--专题-->
-      <template is="topic2-card" data="{{item}}" />
-    </block>
-    <block wx:elif="{{item.type == 'sports_live'}}">
-      <template is="doclive-card" data="{{item}}"/>
-    </block> 
+  <block wx:for="{{news}}" wx:key="news">
+    <template is="article-card" data="{{item}}" />
   </block>
 </view>
 

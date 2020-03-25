@@ -4,15 +4,17 @@ const app = getApp();
 Page({
     data: {
         swiper: {},
-        special: {},
-        news: {},
+        news: [],
+        newsPage: 1,
+        newsTotalPage: 1,
+        comments:[],
+        commentsPage: 1,
+        commentsTotalPage: 1,
         loading: true,
         hasMore: true,
         subtitle: '',
         scrollTop: 0,
         showGoTop: false,
-        showSearch: true,
-        inputValue: '',
     },
     
     showLoading() {
@@ -35,77 +37,31 @@ Page({
      */
     initLoad() {
         this.showLoading();
-        newsdata.find('ClientNews', {
-                id: 'TY43,FOCUSTY43,TYTOPIC',
-                page: 1
-            })
-            .then(d => {
-              console.log(d)
-                d.forEach((obj, index) => {
-                    let validData = obj.item;
-                    if (!validData)
-                        return;
-                    let typeData = obj.type;
-                    if (typeData == 'focus') { //首页轮播图
-                        this.setData({
-                            swiper: obj,
-                        });
-                    } else if (typeData == 'secondnav') { //首页专题导航
-                        this.setData({
-                            special: obj,
-                        });
-                    } else if (typeData == 'list') { //首页新闻列表
-                        this.setData({
-                            news: obj,
-                        });
-                    }
+        let userId = app.globalData.userInfo ? app.globalData.userInfo.wxOpenId : null
+        newsdata.findNews(newsPage, userId)
+                .then(data => {
+                    console.log(data)
                     this.hideLoading();
                 })
-            })
-            .catch(e => {
-                console.error(e)
-                this.setData({
-                    movies: [],
+                .catch(e => {
+                    console.error(e)
+                    this.hideLoading();
                 })
-                this.hideLoading();
-            })
     },
 
     /**
      * [loadMore 加载更多数据]
      * @return {[type]} [description]
      */
-    loadMore() {
-      
-        this.showLoading();
-        let currentPage = this.data.news.currentPage;
+    loadMore() { 
+        // this.showLoading();
+        /* let currentPage = this.data.news.currentPage;
         if (currentPage >= this.data.news.totalPage) {
             this.setData({
                 hasMore: false,
             });
             return;
-        }
-        newsdata.find('ClientNews', {
-                id: 'TY43',
-                page: ++currentPage
-            })
-            .then(d => {
-                let newnews = d[0];
-
-                let olditem = this.data.news.item;
-                newnews.item = olditem.concat(newnews.item);
-                this.setData({
-                    news: newnews,
-                });
-                this.hideLoading();
-            })
-            .catch(e => {
-                this.setData({
-                    subtitle: '获取数据异常',
-                })
-                console.error(e);
-                this.hideLoading();
-            })
+        } */
            
     },
     navToSpecial(event) {
@@ -140,55 +96,16 @@ Page({
             }
         });
     },
-    navToVideo(event) {
-        let str = event.currentTarget.dataset.id;
-        wx.navigateTo({
-            url: '../video-page/video-page?videoUrl=' + str,
-            success: (res) => {},
-            fail: (err) => {
-                console.log(err)
-            }
-        });
-    },
-    navToDocLive(event) {
-        let str = JSON.stringify(event.currentTarget.dataset.liveext);
-        wx.navigateTo({
-            url: '../doclive-page/doclive-page?option=' + str,
-            success: (res) => {},
-            fail: (err) => {
-                console.log(err)
-            }
-        });
-    },
     toTop() {
         console.log(111)
     },
-    searchIcon() {
-        // wx.navigateTo({ url: '../logs/logs' });
-        this.setData({
-            showSearch: false,
-            inputValue: '',
-        });    
-    },
-    bindKeyInput: function(event) {//获取输入的数据
-        this.setData({
-          inputValue: event.detail.value
-        })
-    },
     bindSearch() {//输入框点击完成事件
-        let searchValue = this.data.inputValue;
-        if(searchValue != '') {
-            console.log(this.data.inputValue)
-        }
         wx.showModal({
             title: '提示',
-            content: `你输入的数据：${this.data.inputValue != '' ? this.data.inputValue : '是空的'} ,但是没用，我没做这个功能。`,
+            content: `你输入的数据：是空的 ,但是没用，我没做这个功能。`,
             success: () => {},
             fail: () => {}
         });
-    },
-    ensureBtn(event) {//确定按钮事件
-        this.bindSearch();
     },
     scroll(event) {
         this.setData({

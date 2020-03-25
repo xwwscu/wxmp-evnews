@@ -4,8 +4,6 @@
     "pages/special-page/special-page",
     "pages/article-page/article-page",
     "pages/picture-page/picture-page",
-    "pages/video-page/video-page",
-    "pages/doclive-page/doclive-page",
     "pages/index/index",
     "pages/logs/logs"
   ],
